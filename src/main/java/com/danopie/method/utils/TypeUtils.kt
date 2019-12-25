@@ -8,6 +8,7 @@ object TypeUtils {
             "String" -> true
             "bool" -> true
             "dynamic" -> true
+            "DateTime" -> true
             else -> false
         }
     }
