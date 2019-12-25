@@ -1,0 +1,51 @@
+<idea-plugin>
+    <id>danopie.json2dart</id>
+    <name>Json2Dart</name>
+    <vendor email="danle.sdev@gmail.com">Sendo</vendor>
+
+    <depends>Dart</depends>
+
+    <depends>com.intellij.modules.lang</depends>
+
+    <idea-version since-build="183"/>
+
+    <description><![CDATA[
+      Plugin for dart data classes generating from a json for a flutter project.
+    ]]></description>
+
+    <change-notes><![CDATA[
+      Add a serialization function to generated classes.
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <projectConfigurable
+                groupId="editor"
+                instance="com.danopie.method.configuration.DataClassConfigurable"
+        />
+    </extensions>
+
+    <actions>
+        <action class="com.danopie.JsonToDartAction"
+                id="com.danopie.JsonToDartAction.inNew"
+                text="Convert json to dart">
+            <add-to-group group-id="NewGroup"
+                          anchor="last"
+            />
+        </action>
+        <action id="danopie.action.JsonAction"
+                class="com.danopie.JsonAction"
+                text="toJson() and fromJson()">
+            <add-to-group group-id="GenerateGroup"
+                          anchor="last"
+            />
+        </action>
+    </actions>
+</idea-plugin>
