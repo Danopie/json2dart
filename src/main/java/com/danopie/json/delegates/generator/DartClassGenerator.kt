@@ -2,6 +2,7 @@ package com.danopie.json.delegates.generator
 
 import com.danopie.json.delegates.generator.data.NodeInfo
 import com.danopie.json.delegates.generator.data.NodeWrapper
+import com.danopie.method.ext.toUppercaseFirstChar
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -45,6 +46,8 @@ class DartClassGenerator {
             target = FileOutputStream(File(destiny, "${nodeWrapper.sneakCaseName}.dart"))
             constructorStringBuilder = createConstructorStart(nodeWrapper)
             serializatorStringBuilder = createSerializatorStart()
+
+            target.writeText("import 'package:primitive_type_parser/primitive_type_parser.dart';\n")
 
             buffer.writeText("\nclass ${nodeWrapper.className} {\n\n")
             try {
@@ -90,16 +93,16 @@ class DartClassGenerator {
     private fun extractNodeInfo(node: JsonNode, name: String): NodeInfo {
         return when {
             node.isDouble || node.isFloat || node.isBigDecimal ->
-                NodeInfo("double", name)
+                NodeInfo("double", name, getParseFunction(name, "double"))
 
             node.isShort || node.isInt || node.isLong || node.isBigInteger ->
-                NodeInfo("int", name)
+                NodeInfo("int", name, getParseFunction(name, "int"))
 
             node.isBoolean ->
-                NodeInfo("bool", name)
+                NodeInfo("bool", name, getParseFunction(name, "bool"))
 
             node.isTextual ->
-                NodeInfo("String", name)
+                NodeInfo("String", name, getParseFunction(name, "String"))
 
             node.isArray ->
                 extractArrayData(node as ArrayNode, name)
@@ -110,6 +113,8 @@ class DartClassGenerator {
             else -> NodeInfo("Object", name)
         }
     }
+
+    private fun getParseFunction(name: String, className: String) = "parse${className.toUppercaseFirstChar()}(map[\"$name\"]),\n"
 
     private fun extractArrayData(node: ArrayNode, name: String): NodeInfo {
         val iterator = node.iterator()
@@ -176,7 +181,7 @@ class DartClassGenerator {
     private fun NodeInfo.buildListDeserialization(rawName: String) =
         if (node != null) {
             "map[\"${node.fieldName}\"] == null? null : List<${node.className}>.from(map[\"${node.fieldName}\"]" +
-                ".map((it) => ${node.className}.fromJsonMap(it))),\n"
+                ".map((it) => ${node.className}.fromJson(it))),\n"
         } else {
             "map[\"$rawName\"] == null? null : List<$stringRepresentation>.from(map[\"$rawName\"]),\n"
         }
