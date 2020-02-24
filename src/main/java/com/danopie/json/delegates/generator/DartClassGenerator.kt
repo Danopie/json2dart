@@ -175,10 +175,10 @@ class DartClassGenerator {
 
     private fun NodeInfo.buildListDeserialization(rawName: String) =
         if (node != null) {
-            "List<${node.className}>.from(map[\"${node.fieldName}\"]" +
+            "map[\"${node.fieldName}\"] == null? null : List<${node.className}>.from(map[\"${node.fieldName}\"]" +
                 ".map((it) => ${node.className}.fromJsonMap(it))),\n"
         } else {
-            "List<$stringRepresentation>.from(map[\"$rawName\"]),\n"
+            "map[\"$rawName\"] == null? null : List<$stringRepresentation>.from(map[\"$rawName\"]),\n"
         }
 
     private fun NodeInfo.buildListSerialization(rawName: String) =
