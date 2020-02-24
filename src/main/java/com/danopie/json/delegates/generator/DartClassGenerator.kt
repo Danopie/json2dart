@@ -127,13 +127,13 @@ class DartClassGenerator {
 
     private fun createConstructorStart(nodeWrapper: NodeWrapper) =
         StringBuilder()
-            .append("\n\t${nodeWrapper.className}.fromJsonMap(Map<String, dynamic> map): \n")
+            .append("\n\t${nodeWrapper.className}.fromJson(Map<String, dynamic> map): \n")
 
 
     private fun createSerializatorStart() =
         StringBuilder()
             .append("\tMap<String, dynamic> toJson() {\n")
-            .append("\t\tfinal Map<String, dynamic> data = new Map<String, dynamic>();\n")
+            .append("\t\tfinal data = Map<String, dynamic>();\n")
 
     private fun mergeBufferAndTarget(targetStream: FileOutputStream, bufferFile: File) {
         BufferedReader(FileReader(bufferFile)).useLines { lines ->
@@ -168,7 +168,7 @@ class DartClassGenerator {
         return NodeInfo(
                 className,
                 this,
-                "$className.fromJsonMap(map[\"$fieldName\"]),\n",
+                "$className.fromJson(map[\"$fieldName\"]),\n",
                 "\t\tdata['$field'] = $field == null ? null : $field.toJson();\n"
         )
     }
