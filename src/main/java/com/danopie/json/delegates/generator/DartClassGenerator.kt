@@ -168,7 +168,7 @@ class DartClassGenerator {
         return NodeInfo(
                 className,
                 this,
-                "$className.fromJson(map[\"$fieldName\"]),\n",
+                "map[\"$fieldName\"] == null ? null :  $className.fromJson(map[\"$fieldName\"]),\n",
                 "\t\tdata['$field'] = $field == null ? null : $field.toJson();\n"
         )
     }
