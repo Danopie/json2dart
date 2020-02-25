@@ -21,4 +21,11 @@ data class NodeInfo(
                     mapDeserialization,
                     "\t\tdata['$name'] = $name;\n"
             )
+    constructor(stringRepresentation: String, name: String, mapDeserialization: String, mapSerialization: String):
+            this(
+                    stringRepresentation,
+                    null,
+                    mapDeserialization,
+                    mapSerialization
+            )
 }

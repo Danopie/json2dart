@@ -2,6 +2,7 @@ package com.danopie.json.delegates.generator
 
 import com.danopie.json.delegates.generator.data.NodeInfo
 import com.danopie.json.delegates.generator.data.NodeWrapper
+import com.danopie.json.utils.ISO8601DateValidator
 import com.danopie.method.ext.toUppercaseFirstChar
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ArrayNode
@@ -101,9 +102,13 @@ class DartClassGenerator {
             node.isBoolean ->
                 NodeInfo("bool", name, getParseFunction(name, "bool"))
 
-            node.isTextual ->
-                NodeInfo("String", name, getParseFunction(name, "String"))
-
+            node.isTextual -> {
+                if(ISO8601DateValidator.isValid(node.textValue())){
+                    NodeInfo("DateTime", name, getParseFunction(name, "DateTime"), "\t\tdata['$name'] = $name?.toIso8601String();\n")
+                } else {
+                    NodeInfo("String", name, getParseFunction(name, "String"))
+                }
+            }
             node.isArray ->
                 extractArrayData(node as ArrayNode, name)
 
