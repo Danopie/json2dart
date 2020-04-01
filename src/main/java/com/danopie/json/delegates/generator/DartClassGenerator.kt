@@ -66,7 +66,7 @@ class DartClassGenerator {
                     deleteCharAt(length - 1).deleteCharAt(length - 1).append(";\n")
                 }
                 serializatorStringBuilder
-                    .append("\t\treturn data;\n")
+                    .append("\t\treturn map;\n")
                     .append("\t}\n")
 
                 buffer.writeText(constructorStringBuilder.toString()).writeText("\n")
@@ -104,7 +104,7 @@ class DartClassGenerator {
 
             node.isTextual -> {
                 if(ISO8601DateValidator.isValid(node.textValue())){
-                    NodeInfo("DateTime", name, getParseFunction(name, "DateTime"), "\t\tdata['$name'] = $name?.toIso8601String();\n")
+                    NodeInfo("DateTime", name, getParseFunction(name, "DateTime"), "\t\tmap['$name'] = $name?.toIso8601String();\n")
                 } else {
                     NodeInfo("String", name, getParseFunction(name, "String"))
                 }
@@ -143,7 +143,7 @@ class DartClassGenerator {
     private fun createSerializatorStart() =
         StringBuilder()
             .append("\tMap<String, dynamic> toJson() {\n")
-            .append("\t\tfinal data = Map<String, dynamic>();\n")
+            .append("\t\tfinal map = Map<String, dynamic>();\n")
 
     private fun mergeBufferAndTarget(targetStream: FileOutputStream, bufferFile: File) {
         BufferedReader(FileReader(bufferFile)).useLines { lines ->
@@ -179,7 +179,7 @@ class DartClassGenerator {
                 className,
                 this,
                 "map[\"$fieldName\"] == null ? null :  $className.fromJson(map[\"$fieldName\"]),\n",
-                "\t\tdata['$field'] = $field == null ? null : $field.toJson();\n"
+                "\t\tmap['$field'] = $field == null ? null : $field.toJson();\n"
         )
     }
 
@@ -193,11 +193,11 @@ class DartClassGenerator {
 
     private fun NodeInfo.buildListSerialization(rawName: String) =
         if (node != null) {
-            "\t\tdata['$rawName'] = ${node.fieldName} != null ? \n" +
+            "\t\tmap['$rawName'] = ${node.fieldName} != null ? \n" +
                 "\t\t\tthis.${node.fieldName}.map((v) => v.toJson()).toList()\n" +
                 "\t\t\t: null;\n"
         } else {
-            "\t\tdata['$rawName'] = $rawName;\n"
+            "\t\tmap['$rawName'] = $rawName;\n"
         }
 
 

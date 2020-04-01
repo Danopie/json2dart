@@ -11,7 +11,7 @@ data class NodeInfo(
             stringRepresentation,
             null,
             "map[\"$name\"],\n",
-            "\t\tdata['$name'] = $name;\n"
+            "\t\tmap['$name'] = $name;\n"
         )
 
     constructor(stringRepresentation: String, name: String, mapDeserialization: String):
@@ -19,7 +19,7 @@ data class NodeInfo(
                     stringRepresentation,
                     null,
                     mapDeserialization,
-                    "\t\tdata['$name'] = $name;\n"
+                    "\t\tmap['$name'] = $name;\n"
             )
     constructor(stringRepresentation: String, name: String, mapDeserialization: String, mapSerialization: String):
             this(
